@@ -1,5 +1,6 @@
 import pygame
 import math
+import random
 
 from simulation import Cloth
 
@@ -56,7 +57,11 @@ def main():
 
     for i in range(len(cloth.points)-1):
       for j in range(len(cloth.points[0])-1):
-        pygame.draw.polygon(screen, (cloth.points[i][j].x*255/2000,cloth.points[i+1][j+1].y*255/2000,0), [(cloth.points[i][j].x,cloth.points[i][j].y), (cloth.points[i+1][j].x,cloth.points[i+1][j].y), (cloth.points[i+1][j+1].x,cloth.points[i+1][j+1].y), (cloth.points[i][j+1].x,cloth.points[i][j+1].y)])
+        v1 = (cloth.points[i][j].x, cloth.points[i][j].y)
+        v2 = (cloth.points[i+1][j].x, cloth.points[i+1][j].y)
+        v3 = (cloth.points[i+1][j+1].x, cloth.points[i+1][j+1].y)
+        v4 = (cloth.points[i][j+1].x, cloth.points[i][j+1].y)
+        pygame.draw.polygon(screen, (255*random.random(),255*random.random(),255*random.random()), (v1,v2,v3,v4), 0)
     
     for link in cloth.links:
       pygame.draw.line(screen, (255,255,255), (link.p1.x,link.p1.y), (link.p2.x,link.p2.y), 2)
