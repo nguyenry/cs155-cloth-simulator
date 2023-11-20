@@ -4,6 +4,8 @@ import random
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import rgb_to_hsv, hsv_to_rgb
+import cv2
+
 
 from simulation import Cloth
 
@@ -19,9 +21,6 @@ pygame.display.set_caption("Pygame Cloth Simulation")
 screen_w, screen_h = screen.get_size()
 
 screen.set_alpha(None)
-
-cloth_image = pygame.image.load("amogus.png")
-cloth_image = pygame.transform.scale(cloth_image, (10, 10))  # Adjust the size as needed
 
 
 def main():
@@ -79,7 +78,11 @@ def main():
         (r,g,b) = (v1[0]/screen_w,v1[1]/screen_h,0.5)
         (r,g,b) = (255*r,255*g,255*b)
 
-        pygame.draw.polygon(screen, (r,g,b), (v1,v2,v3,v4), 0)
+        points = [v1,v2,v3,v4]
+        
+        pygame.draw.polygon(screen, (r,g,b), points, 0)
+
+        
         
     
     for link in cloth.links:
@@ -88,6 +91,8 @@ def main():
     #for points in cloth.points:
     #  for point in points:
     #    pygame.draw.circle(screen, (255,255,255), (int(point.x),int(point.y)), 2)
+    
+
     
     #--- Our edits end here ---
     pygame.display.update()
