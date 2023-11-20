@@ -1,6 +1,9 @@
 import pygame
 import math
 import random
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.colors import rgb_to_hsv, hsv_to_rgb
 
 from simulation import Cloth
 
@@ -30,13 +33,6 @@ def main():
   
 
   drag = False
-
-  base_color = [random.random() for _ in range(3)]  # Random RGB values for the base color
-  color_array = []
-  for i in range(len(cloth.points)-1):
-    variation = [(random.random() - 0.5) * 0.2 for _ in range(3)]  # Small random variation
-    new_color = [min(1.0, max(0.0, base_color[j] + variation[j])) for j in range(3)]
-    color_array.append(new_color)
 
   while 1:
     for event in pygame.event.get():
@@ -78,9 +74,6 @@ def main():
         v3 = (cloth.points[i+1][j+1].x, cloth.points[i+1][j+1].y)
         v4 = (cloth.points[i][j+1].x, cloth.points[i][j+1].y)
 
-        r = int(color_array[i][0] * 255)
-        g = int(color_array[i][1] * 255)
-        b = int(color_array[i][2] * 255)
         pygame.draw.polygon(screen, (r,g,b), (v1,v2,v3,v4), 0)
         
     
