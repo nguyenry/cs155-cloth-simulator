@@ -59,13 +59,10 @@ def main():
     
     screen.fill("white")
 
+    #--- Our edits start here ---
     #https://www.pygame.org/docs/ref/draw.html#pygame.draw.polygon
     # ^ for drawing the cloth
     r,g,b = 100,150,200
-    
-    
-
- 
 
     for i in range(len(cloth.points)-1):
       for j in range(len(cloth.points[0])-1):
@@ -84,6 +81,7 @@ def main():
     #  for point in points:
     #    pygame.draw.circle(screen, (255,255,255), (int(point.x),int(point.y)), 2)
     
+    #--- Our edits end here ---
     pygame.display.update()
     clock.tick(30)
 
