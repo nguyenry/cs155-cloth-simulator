@@ -28,11 +28,11 @@ def main():
   
   pygame.event.set_allowed([pygame.QUIT, pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP, pygame.KEYDOWN])
   
-  cloth_size = 100
-  cloth_l = 5
+  cloth_size = 50
+  cloth_l = 10
   cloth = Cloth(size=cloth_size, l=cloth_l, tear=5000, offset=(100,20), screen_size=(screen_w,screen_h))
   
-  map_img = cv2.imread('amogus.png')  # Provide the correct path
+  map_img = cv2.imread('flag copy.png')  
   map_img = cv2.resize(map_img, (cloth_size, cloth_size))  # Resize image to match cloth size
   drag = False
 
