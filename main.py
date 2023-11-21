@@ -29,10 +29,10 @@ def main():
   pygame.event.set_allowed([pygame.QUIT, pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP, pygame.KEYDOWN])
   
   cloth_size = 50
-  cloth_l = 10
-  cloth = Cloth(size=cloth_size, l=cloth_l, tear=5000, offset=(100,20), screen_size=(screen_w,screen_h))
+  cloth_l = 500/cloth_size
+  cloth = Cloth(size=cloth_size, l=cloth_l, tear=10000, offset=(100,20), screen_size=(screen_w,screen_h))
   
-  map_img = cv2.imread('flag copy.png')  
+  map_img = cv2.imread('amogus.png')  
   map_img = cv2.resize(map_img, (cloth_size, cloth_size))  # Resize image to match cloth size
   drag = False
 
@@ -50,7 +50,7 @@ def main():
         cloth.end_drag()
       elif event.type == pygame.KEYDOWN:
         if event.key == pygame.K_r:
-          cloth = Cloth(size=50, l=10, tear=5000,offset=(100,20), screen_size=(screen_w,screen_h))
+          cloth = Cloth(size=cloth_size, l=cloth_l, tear=5000,offset=(100,20), screen_size=(screen_w,screen_h))
     
     mouse_pos = pygame.mouse.get_pos()
     
@@ -79,10 +79,10 @@ def main():
         v3 = (cloth.points[i+1][j+1].x, cloth.points[i+1][j+1].y)
         v4 = (cloth.points[i][j+1].x, cloth.points[i][j+1].y)
         
-        # chat gpt help for the following 2 lines
+        # chat gpt help for some of the following code
         img_i, img_j = int(i * map_img.shape[0] / len(cloth.points)), int(j * map_img.shape[1] / len(cloth.points[0]))
         color = map_img[img_i, img_j]
-
+        color = (color[2], color[1], color[0])
         points = [v1, v2, v3, v4]
         pygame.draw.polygon(screen, color, points, 0)
 
