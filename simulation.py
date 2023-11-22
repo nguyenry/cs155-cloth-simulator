@@ -57,15 +57,32 @@ class Link:
         self.p2.x -= dx
         self.p2.y -= dy
 
+class Patch:
+  def __init__(self, top, bottom, left, right, color=(255,255,255)):
+    self.top, self.bottom, self.left, self.right = top, bottom, left, right
+    self.points = [self.top.p2, self.right.p2, self.bottom.p1, self.left.p1]
+    self.broken = False
+    self.color = color
+  
+  def solve(self):
+    #determine if patch is broken
+    if self.top.broken == True or self.bottom.broken == True or self.left.broken == True or self.right.broken == True:
+      self.broken = True
+      return
+    else:
+      self.points = [self.top.p2, self.right.p2, self.bottom.p1, self.left.p1]
+    pass
 
 class Cloth:
-  def __init__(self, size=15, l=10, tear=50, offset=(0,0), screen_size=(500,300)):
+  def __init__(self, size=15, l=10, tear=50, offset=(0,0), screen_size=(500,300), colors = [[(255,255,255) for i in range(15)] for j in range(15)]):
     global screen_w, screen_h
     screen_w, screen_h = screen_size
     
     self.points = [[Point(x*l+offset[0],y*l+offset[1]) for x in range(size)] for y in range(size)]
     
     self.links = []
+
+    self.patches = []
     
     for y, row in enumerate(self.points):
       for x, point in enumerate(row):
@@ -74,9 +91,26 @@ class Cloth:
         else:
           if x != 0:
             self.links.append(Link(point, row[x-1], l, tear))
-          
           self.links.append(Link(point, self.points[y-1][x], l, tear))
-    
+
+    #initialize patches
+    for i in range(size-1):
+      link = Link(self.points[0][i+1], self.points[0][i], l, tear)
+      top = link
+      left = self.links[i*2]
+      right = self.links[(i+1)*2]
+      bottom = self.links[i*2+1]
+      self.patches.append(Patch(top, bottom, left, right, colors[0][i]))
+    for i in range(1, size-1):
+      for j in range(0, size-1):
+        top = self.links[j*2+(i-1)*(2*(size-1)+1)+1]
+
+        left = self.links[j*2+i*(2*(size-1)+1)]
+        bottom = self.links[j*2+i*(2*(size-1)+1)+1]
+        right = self.links[j*2+i*(2*(size-1)+1)+2]
+        
+        self.patches.append(Patch(top, bottom, left, right, colors[i][j]))
+
     self.dragging = []
   
   def start_drag(self, pos, drag_radius=20):
@@ -108,6 +142,11 @@ class Cloth:
           self.links.remove(link)
         else:
           link.solve()
+      for patch in self.patches:
+        if patch.broken == True:
+          self.patches.remove(patch)
+        else:
+          patch.solve()
     
     for points in self.points:
       for point in points:

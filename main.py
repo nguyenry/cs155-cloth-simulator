@@ -27,14 +27,21 @@ def main():
   clock = pygame.time.Clock()
   
   pygame.event.set_allowed([pygame.QUIT, pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP, pygame.KEYDOWN])
+
   
   cloth_size = 50
-  cloth_l = 500/cloth_size
-  cloth = Cloth(size=cloth_size, l=cloth_l, tear=10000, offset=(100,20), screen_size=(screen_w,screen_h))
-  
+  cloth_l = 10
+
   map_img = cv2.imread('amogus.png')  
   map_img = cv2.resize(map_img, (cloth_size, cloth_size))  # Resize image to match cloth size
   drag = False
+  #2d array of colors
+  colors = np.zeros((cloth_size,cloth_size,3))
+  for i in range(cloth_size):
+    for j in range(cloth_size):
+      colors[i][j] = map_img[i][j]
+    
+  cloth = Cloth(size=cloth_size, l=cloth_l, tear=500, offset=(100,20), screen_size=(screen_w,screen_h), colors = colors)
 
   while 1:
     for event in pygame.event.get():
@@ -50,7 +57,7 @@ def main():
         cloth.end_drag()
       elif event.type == pygame.KEYDOWN:
         if event.key == pygame.K_r:
-          cloth = Cloth(size=cloth_size, l=cloth_l, tear=5000,offset=(100,20), screen_size=(screen_w,screen_h))
+          cloth = Cloth(size=cloth_size, l=cloth_l, tear=500,offset=(100,20), screen_size=(screen_w,screen_h), colors = colors)
     
     mouse_pos = pygame.mouse.get_pos()
     
@@ -59,38 +66,19 @@ def main():
     
     cloth.update()
     
-    screen.fill("white")
+    screen.fill("sky blue")
 
     #--- Our edits start here ---
     #https://www.pygame.org/docs/ref/draw.html#pygame.draw.polygon
     # ^ for drawing the cloth
     r,g,b = 100,150,200
-
-    #2d array of colors
-    colors = np.zeros((len(cloth.points),len(cloth.points[0]),3))
-    for i in range(len(cloth.points)):
-      for j in range(len(cloth.points[0])):
-        colors[i][j] = [i/len(cloth.points),j/len(cloth.points[0]),0.5]
     
-    for i in range(len(cloth.points)-1):
-      for j in range(len(cloth.points[0])-1):
-        v1 = (cloth.points[i][j].x, cloth.points[i][j].y)
-        v2 = (cloth.points[i+1][j].x, cloth.points[i+1][j].y)
-        v3 = (cloth.points[i+1][j+1].x, cloth.points[i+1][j+1].y)
-        v4 = (cloth.points[i][j+1].x, cloth.points[i][j+1].y)
-        
-        # chat gpt help for some of the following code
-        img_i, img_j = int(i * map_img.shape[0] / len(cloth.points)), int(j * map_img.shape[1] / len(cloth.points[0]))
-        color = map_img[img_i, img_j]
-        color = (color[2], color[1], color[0])
-        points = [v1, v2, v3, v4]
-        pygame.draw.polygon(screen, color, points, 0)
-
-        
-        
+    for patch in cloth.patches:
+        points = [(p.x,p.y) for p in patch.points]
+        pygame.draw.polygon(screen, patch.color, points, 0)
     
     for link in cloth.links:
-      pygame.draw.line(screen, (255,255,255), (link.p1.x,link.p1.y), (link.p2.x,link.p2.y), 0)
+      pygame.draw.line(screen, (100,100,100), (link.p1.x,link.p1.y), (link.p2.x,link.p2.y), 1)
 
     #for points in cloth.points:
     #  for point in points:
