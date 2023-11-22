@@ -56,7 +56,7 @@ class Link:
       if self.p2.pinned == False and self.p1.drag == False:
         self.p2.x -= dx
         self.p2.y -= dy
-
+#--- Our edits start here ---
 class Patch:
   def __init__(self, top, bottom, left, right, color=(255,255,255)):
     self.top, self.bottom, self.left, self.right = top, bottom, left, right
@@ -72,7 +72,7 @@ class Patch:
     else:
       self.points = [self.top.p2, self.right.p2, self.bottom.p1, self.left.p1]
     pass
-
+#--- Our edits end here ---
 class Cloth:
   def __init__(self, size=15, l=10, tear=50, offset=(0,0), screen_size=(500,300), colors = [[(255,255,255) for i in range(15)] for j in range(15)]):
     global screen_w, screen_h
@@ -92,7 +92,7 @@ class Cloth:
           if x != 0:
             self.links.append(Link(point, row[x-1], l, tear))
           self.links.append(Link(point, self.points[y-1][x], l, tear))
-
+    #--- Our edits start here ---
     #initialize patches
     for i in range(size-1):
       link = Link(self.points[0][i+1], self.points[0][i], l, tear)
@@ -107,9 +107,8 @@ class Cloth:
         left = self.links[j*2+i*(2*(size-1)+1)]
         bottom = self.links[j*2+i*(2*(size-1)+1)+1]
         right = self.links[j*2+i*(2*(size-1)+1)+2]
-        
         self.patches.append(Patch(top, bottom, left, right, colors[i][j]))
-
+    #--- Our edits end here ---
     self.dragging = []
   
   def start_drag(self, pos, drag_radius=20):
@@ -141,11 +140,13 @@ class Cloth:
           self.links.remove(link)
         else:
           link.solve()
+      #--- Our edits start here ---
       for patch in self.patches:
         if patch.broken == True:
           self.patches.remove(patch)
         else:
           patch.solve()
+      #--- Our edits end here ---
     
     for points in self.points:
       for point in points:

@@ -28,9 +28,9 @@ def main():
   
   pygame.event.set_allowed([pygame.QUIT, pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP, pygame.KEYDOWN])
 
-  
+  #--- Our edits start here ---
   cloth_size = 100
-  cloth_l = 5
+  cloth_l = 0.5
   c_tear = 500
 
   map_img = cv2.imread('amogus.png')  
@@ -46,6 +46,7 @@ def main():
     
   cloth = Cloth(size=cloth_size, l=cloth_l, tear=c_tear, offset=(100,20), screen_size=(screen_w,screen_h), colors = colors)
 
+  #--- Our edits end here ---
   while 1:
     for event in pygame.event.get():
       if event.type == pygame.QUIT:
@@ -69,7 +70,7 @@ def main():
     
     cloth.update()
     
-    screen.fill("sky blue")
+    screen.fill("white")
 
     #--- Our edits start here ---
     #https://www.pygame.org/docs/ref/draw.html#pygame.draw.polygon
@@ -81,7 +82,7 @@ def main():
         pygame.draw.polygon(screen, patch.color, points, 0)
     
     for link in cloth.links:
-      pygame.draw.line(screen, (100,100,100), (link.p1.x,link.p1.y), (link.p2.x,link.p2.y), 1)
+      pygame.draw.line(screen, (100,100,100), (link.p1.x,link.p1.y), (link.p2.x,link.p2.y), 0)
 
     #for points in cloth.points:
     #  for point in points:
