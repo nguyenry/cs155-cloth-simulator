@@ -31,7 +31,7 @@ def main():
   #--- Our edits start here ---
   cloth_size = 50
   cloth_l = 500/cloth_size
-  c_tear = 100
+  c_tear = 1000
 
   map_img = cv2.imread('amogus.png')  
   map_img = cv2.resize(map_img, (cloth_size, cloth_size))  # Resize image to match cloth size
