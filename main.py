@@ -29,9 +29,9 @@ def main():
   pygame.event.set_allowed([pygame.QUIT, pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP, pygame.KEYDOWN])
 
   #--- Our edits start here ---
-  cloth_size = 100
-  cloth_l = 0.5
-  c_tear = 500
+  cloth_size = 50
+  cloth_l = 500/cloth_size
+  c_tear = 100
 
   map_img = cv2.imread('amogus.png')  
   map_img = cv2.resize(map_img, (cloth_size, cloth_size))  # Resize image to match cloth size
