@@ -29,8 +29,9 @@ def main():
   pygame.event.set_allowed([pygame.QUIT, pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP, pygame.KEYDOWN])
 
   
-  cloth_size = 50
-  cloth_l = 10
+  cloth_size = 100
+  cloth_l = 5
+  c_tear = 500
 
   map_img = cv2.imread('amogus.png')  
   map_img = cv2.resize(map_img, (cloth_size, cloth_size))  # Resize image to match cloth size
@@ -39,9 +40,11 @@ def main():
   colors = np.zeros((cloth_size,cloth_size,3))
   for i in range(cloth_size):
     for j in range(cloth_size):
-      colors[i][j] = map_img[i][j]
+      color = map_img[i][j]
+      color = (color[2],color[1],color[0])
+      colors[i][j] = color
     
-  cloth = Cloth(size=cloth_size, l=cloth_l, tear=500, offset=(100,20), screen_size=(screen_w,screen_h), colors = colors)
+  cloth = Cloth(size=cloth_size, l=cloth_l, tear=c_tear, offset=(100,20), screen_size=(screen_w,screen_h), colors = colors)
 
   while 1:
     for event in pygame.event.get():
@@ -57,7 +60,7 @@ def main():
         cloth.end_drag()
       elif event.type == pygame.KEYDOWN:
         if event.key == pygame.K_r:
-          cloth = Cloth(size=cloth_size, l=cloth_l, tear=500,offset=(100,20), screen_size=(screen_w,screen_h), colors = colors)
+          cloth = Cloth(size=cloth_size, l=cloth_l, tear=c_tear,offset=(100,20), screen_size=(screen_w,screen_h), colors = colors)
     
     mouse_pos = pygame.mouse.get_pos()
     

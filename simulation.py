@@ -104,7 +104,6 @@ class Cloth:
     for i in range(1, size-1):
       for j in range(0, size-1):
         top = self.links[j*2+(i-1)*(2*(size-1)+1)+1]
-
         left = self.links[j*2+i*(2*(size-1)+1)]
         bottom = self.links[j*2+i*(2*(size-1)+1)+1]
         right = self.links[j*2+i*(2*(size-1)+1)+2]
