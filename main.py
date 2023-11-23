@@ -91,8 +91,11 @@ def main():
     #    pygame.draw.circle(screen, (255,255,255), (int(point.x),int(point.y)), 2)
     
     #double sided shenanigans
-    # would recommend running on a smaller sized cloth eg: size = 10
+    # would recommend running on a smaller sized cloth (10 - 20)
+    # effect is most apparent when lifting cloth from bottom or
+    # grabbing the left or right edge and moving it far left or right
     # can uncomment to see effect, may need to comment out the patches lines (81-83) first
+    
     '''
     for i in range(len(cloth.points)-1):
       for j in range(len(cloth.points[0])-1):
