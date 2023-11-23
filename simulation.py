@@ -58,11 +58,12 @@ class Link:
         self.p2.y -= dy
 #--- Our edits start here ---
 class Patch:
-  def __init__(self, top, bottom, left, right, color=(255,255,255)):
+  def __init__(self, top, bottom, left, right, color_f=(255,255,255), color_b=(255,255,255)):
     self.top, self.bottom, self.left, self.right = top, bottom, left, right
     self.points = [self.top.p2, self.right.p2, self.bottom.p1, self.left.p1]
     self.broken = False
-    self.color = color
+    self.colorf = color_f
+    self.colorb = color_b
   
   def solve(self):
     #determine if patch is broken
@@ -74,7 +75,7 @@ class Patch:
     pass
 #--- Our edits end here ---
 class Cloth:
-  def __init__(self, size=15, l=10, tear=50, offset=(0,0), screen_size=(500,300), colors = [[(255,255,255) for i in range(15)] for j in range(15)]):
+  def __init__(self, size=15, l=10, tear=50, offset=(0,0), screen_size=(500,300), colors_f = [[(255,255,255) for i in range(15)] for j in range(15)], colors_b = [[(255,255,255) for i in range(15)] for j in range(15)]):
     global screen_w, screen_h
     screen_w, screen_h = screen_size
     
@@ -103,14 +104,14 @@ class Cloth:
       left = self.links[i*2]
       right = self.links[(i+1)*2]
       bottom = self.links[i*2+1]
-      self.patches.append(Patch(top, bottom, left, right, colors[0][i]))
+      self.patches.append(Patch(top, bottom, left, right, colors_f[0][i], colors_b[0][i]))
     for i in range(1, size-1):
       for j in range(0, size-1):
         top = self.links[j*2+(i-1)*(2*(size-1)+1)+1]
         left = self.links[j*2+i*(2*(size-1)+1)]
         bottom = self.links[j*2+i*(2*(size-1)+1)+1]
         right = self.links[j*2+i*(2*(size-1)+1)+2]
-        self.patches.append(Patch(top, bottom, left, right, colors[i][j]))
+        self.patches.append(Patch(top, bottom, left, right, colors_f[i][j], colors_b[i][j]))
     #--- Our edits end here ---
     self.dragging = []
   

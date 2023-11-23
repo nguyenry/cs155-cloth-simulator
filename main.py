@@ -29,22 +29,40 @@ def main():
   pygame.event.set_allowed([pygame.QUIT, pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP, pygame.KEYDOWN])
 
   #--- Our edits start here ---
-  cloth_size = 25
+  cloth_size = 30
   cloth_l = 250/cloth_size
   c_tear = 1000
 
-  map_img = cv2.imread('amogus.png')  
-  map_img = cv2.resize(map_img, (cloth_size, cloth_size))  # Resize image to match cloth size
+  amog_img = cv2.imread('amogus.png')  
+  amog_img = cv2.resize(amog_img, (cloth_size, cloth_size))  # Resize image to match cloth size
+  flag_img = cv2.imread('flag copy.png')  
+  flag_img = cv2.resize(flag_img, (cloth_size, cloth_size))  # Resize image to match cloth size
+  india_img = cv2.imread('jai hind.png')  
+  india_img = cv2.resize(india_img, (cloth_size, cloth_size))  # Resize image to match cloth size
   drag = False
   #2d array of colors
-  colors = np.zeros((cloth_size,cloth_size,3))
+  colors_amog = np.zeros((cloth_size,cloth_size,3))
   for i in range(cloth_size):
     for j in range(cloth_size):
-      color = map_img[i][j]
+      color = amog_img[i][j]
       color = (color[2],color[1],color[0])
-      colors[i][j] = color
+      colors_amog[i][j] = color
+
+  colors_flag = np.zeros((cloth_size,cloth_size,3))
+  for i in range(cloth_size):
+    for j in range(cloth_size):
+      color = flag_img[i][j]
+      color = (color[2],color[1],color[0])
+      colors_flag[i][j] = color
+
+  colors_ind = np.zeros((cloth_size,cloth_size,3))
+  for i in range(cloth_size):
+    for j in range(cloth_size):
+      color = india_img[i][j]
+      color = (color[2],color[1],color[0])
+      colors_ind[i][j] = color
     
-  cloth = Cloth(size=cloth_size, l=cloth_l, tear=c_tear, offset=(100,20), screen_size=(screen_w,screen_h), colors = colors)
+  cloth = Cloth(size=cloth_size, l=cloth_l, tear=c_tear, offset=(100,20), screen_size=(screen_w,screen_h), colors_f = colors_ind, colors_b = colors_flag)
 
   #--- Our edits end here ---
   while 1:
@@ -61,7 +79,7 @@ def main():
         cloth.end_drag()
       elif event.type == pygame.KEYDOWN:
         if event.key == pygame.K_r:
-          cloth = Cloth(size=cloth_size, l=cloth_l, tear=c_tear,offset=(100,20), screen_size=(screen_w,screen_h), colors = colors)
+            cloth = Cloth(size=cloth_size, l=cloth_l, tear=c_tear, offset=(100,20), screen_size=(screen_w,screen_h), colors_f = colors_ind, colors_b = colors_flag)
     
     mouse_pos = pygame.mouse.get_pos()
     
@@ -139,9 +157,9 @@ def main():
 
       # double sided effect
       if angleBetweenVectorsX < 70 or angleBetweenVectorsY < 70: #can mess with these numbers if desired
-        color = patch.color  #back side color
+        color = patch.colorb  #back side color
       else:
-        color = "blue" #front side color
+        color = patch.colorf #front side color
 
       points = [(p.x,p.y) for p in patch.points]
       pygame.draw.polygon(screen, color, points, 0)
