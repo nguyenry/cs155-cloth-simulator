@@ -94,7 +94,7 @@ def main():
 
     #change screen color based on what side of the cloth is showing
     #currently: goes from green to blue
-    screenColor = (cloth.patchesFlipped / 1000 ) * 255 #can mess with the 1000 number, was trying to normalize by amount of patches
+    screenColor = (cloth.patchesFlipped / 5000 ) * 255 #can mess with the 5000 number, was trying to normalize by amount of patches
     screen.fill((25,50,screenColor)) #can mess with these numbers
 
     r,g,b = 100,150,200
