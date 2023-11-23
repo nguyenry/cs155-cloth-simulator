@@ -64,6 +64,8 @@ class Patch:
     self.broken = False
     self.colorf = color_f
     self.colorb = color_b
+    #represents if patch is showing backside
+    self.flipped = False
   
   def solve(self):
     #determine if patch is broken
@@ -87,6 +89,9 @@ class Cloth:
     self.links = []
 
     self.patches = []
+
+    #counts how many patches are showing the backside
+    self.patchesFlipped = 0
     
     for y, row in enumerate(self.points):
       for x, point in enumerate(row):

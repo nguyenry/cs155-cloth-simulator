@@ -87,12 +87,16 @@ def main():
       cloth.drag(mouse_pos[0]-drag_pos[0],mouse_pos[1]-drag_pos[1])
     
     cloth.update()
-    
-    screen.fill("white")
 
     #--- Our edits start here ---
     #https://www.pygame.org/docs/ref/draw.html#pygame.draw.polygon
     # ^ for drawing the cloth
+
+    #change screen color based on what side of the cloth is showing
+    #currently: goes from green to blue
+    screenColor = (cloth.patchesFlipped / 1000 ) * 255 #can mess with the 1000 number, was trying to normalize by amount of patches
+    screen.fill((25,50,screenColor)) #can mess with these numbers
+
     r,g,b = 100,150,200
     
   
@@ -111,6 +115,8 @@ def main():
     # for double sided shenanigans:
     # would recommend running on a smaller sized cloth (10 - 20)
     
+    
+
     for patch in cloth.patches:
       [v1, v2, v3, v4] = patch.points
 
@@ -148,11 +154,24 @@ def main():
       highlightVec = [0,0,50]
       angleBetweenHighlight = np.dot(normal, highlightVec)
 
+      
       # double sided effect
       if angleBetweenHighlight < 70: #can mess with these numbers if desired
         color = patch.colorb  #back side color
+        
+        #recognize patch is flipped
+        if patch.flipped == False:
+          patch.flipped = True 
+          cloth.patchesFlipped+=1 #increment patches flipped
+
       else:
         color = patch.colorf #front side color
+
+        #if previously flipped, recongize it is no longer flipped
+        if patch.flipped == True:
+          patch.flipped = False 
+          cloth.patchesFlipped-=1 #unincrement patches flipped
+        
 
       points = [(p.x,p.y) for p in patch.points]
       pygame.draw.polygon(screen, color, points, 0)
