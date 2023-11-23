@@ -77,10 +77,12 @@ def main():
     # ^ for drawing the cloth
     r,g,b = 100,150,200
     
+  
     for patch in cloth.patches:
         points = [(p.x,p.y) for p in patch.points]
         pygame.draw.polygon(screen, patch.color, points, 0)
     
+
     for link in cloth.links:
       pygame.draw.line(screen, (100,100,100), (link.p1.x,link.p1.y), (link.p2.x,link.p2.y), 0)
 
@@ -90,6 +92,7 @@ def main():
     
     #double sided shenanigans
     # would recommend running on a smaller sized cloth eg: size = 10
+    # can uncomment to see effect, may need to comment out the patches lines (81-83) first
     '''
     for i in range(len(cloth.points)-1):
       for j in range(len(cloth.points[0])-1):
@@ -97,8 +100,6 @@ def main():
         v2 = (cloth.points[i+1][j].x, cloth.points[i+1][j].y)
         v3 = (cloth.points[i+1][j+1].x, cloth.points[i+1][j+1].y)
         v4 = (cloth.points[i][j+1].x, cloth.points[i][j+1].y)
-      
-        magnitude = cloth.length
 
         #point A
         Ax = v1[0]
@@ -111,6 +112,8 @@ def main():
         #point C
         Cx = v4[0]
         Cy = v4[1]
+
+        magnitude = cloth.length
 
         # vector AB
         ABx = Bx - Ax
@@ -128,14 +131,18 @@ def main():
 
         normal = np.cross(vecAB, vecAC)
 
-        angleCompVector = [50, 0, 0]
+        # vectors to compare angle difference to normal vector
+        angleCompVectorX = [50, 0, 0]
+        angleCompVectorY = [0, 500, 0]
 
-        angleBetweenVectors = np.dot(normal, angleCompVector)
+        angleBetweenVectorsX = np.dot(normal, angleCompVectorX)
+        angleBetweenVectorsY = np.dot(normal, angleCompVectorY)
 
-        if angleBetweenVectors > 50:
-          color = "blue"
+        # double sided effect
+        if angleBetweenVectorsX < 45 or angleBetweenVectorsY < 45: #can mess with these numbers if desired
+          color = "red"  #back side color
         else:
-          color = "red"
+          color = "blue" #front side color
 
         pygame.draw.polygon(screen, color, (v1,v2,v3,v4), 0)
     '''
