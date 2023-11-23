@@ -8,7 +8,7 @@ class Point:
     self.pinned = False
     self.drag = False
   
-  def update(self, ax = 0.5, ay = 0.5, max_a = 15):
+  def update(self, ax = 0.25, ay = 0.5, max_a = 15):
     if self.pinned == False:
       vx, vy = min(self.x - self.lx, max_a), min(self.y - self.ly, max_a)
       
