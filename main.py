@@ -29,15 +29,15 @@ def main():
   pygame.event.set_allowed([pygame.QUIT, pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP, pygame.KEYDOWN])
 
   #--- Our edits start here ---
-  cloth_size = 30
-  cloth_l = 250/cloth_size
-  c_tear = 1000
+  cloth_size = 50
+  cloth_l = 500/cloth_size
+  c_tear = 10000
 
   amog_img = cv2.imread('amogus.png')  
   amog_img = cv2.resize(amog_img, (cloth_size, cloth_size))  # Resize image to match cloth size
   flag_img = cv2.imread('flag copy.png')  
   flag_img = cv2.resize(flag_img, (cloth_size, cloth_size))  # Resize image to match cloth size
-  india_img = cv2.imread('jai hind.png')  
+  india_img = cv2.imread('india.png')  
   india_img = cv2.resize(india_img, (cloth_size, cloth_size))  # Resize image to match cloth size
   drag = False
   #2d array of colors
@@ -62,7 +62,7 @@ def main():
       color = (color[2],color[1],color[0])
       colors_ind[i][j] = color
     
-  cloth = Cloth(size=cloth_size, l=cloth_l, tear=c_tear, offset=(100,20), screen_size=(screen_w,screen_h), colors_f = colors_ind, colors_b = colors_flag)
+  cloth = Cloth(size=cloth_size, l=cloth_l, tear=c_tear, offset=(100,20), screen_size=(screen_w,screen_h), colors_f = colors_amog, colors_b = colors_flag)
 
   #--- Our edits end here ---
   while 1:
@@ -79,7 +79,7 @@ def main():
         cloth.end_drag()
       elif event.type == pygame.KEYDOWN:
         if event.key == pygame.K_r:
-            cloth = Cloth(size=cloth_size, l=cloth_l, tear=c_tear, offset=(100,20), screen_size=(screen_w,screen_h), colors_f = colors_ind, colors_b = colors_flag)
+            cloth = Cloth(size=cloth_size, l=cloth_l, tear=c_tear, offset=(100,20), screen_size=(screen_w,screen_h), colors_f = colors_amog, colors_b = colors_flag)
     
     mouse_pos = pygame.mouse.get_pos()
     
@@ -105,8 +105,8 @@ def main():
     #    pygame.draw.polygon(screen, patch.color, points, 0)
     
 
-    for link in cloth.links:
-      pygame.draw.line(screen, (100,100,100), (link.p1.x,link.p1.y), (link.p2.x,link.p2.y), 0)
+    #for link in cloth.links:
+    #  pygame.draw.line(screen, (100,100,100), (link.p1.x,link.p1.y), (link.p2.x,link.p2.y), 1)
 
     #for points in cloth.points:
     #  for point in points:
@@ -175,7 +175,7 @@ def main():
 
       points = [(p.x,p.y) for p in patch.points]
       pygame.draw.polygon(screen, color, points, 0)
-    
+  
     
     #--- Our edits end here ---
     pygame.display.update()

@@ -1,6 +1,7 @@
 import math
+import numpy as np
 
-
+COLLISION_THRESHOLD = 5.0
 class Point:
   def __init__(self, x, y):
     self.x, self.y = x, y
@@ -8,7 +9,7 @@ class Point:
     self.pinned = False
     self.drag = False
   
-  def update(self, ax = 0.25, ay = 0.5, max_a = 15):
+  def update(self, ax = 0, ay = 0.5, max_a = 15):
     if self.pinned == False:
       vx, vy = min(self.x - self.lx, max_a), min(self.y - self.ly, max_a)
       
@@ -159,4 +160,4 @@ class Cloth:
     
     for points in self.points:
       for point in points:
-        point.update()
+        point.update()  
