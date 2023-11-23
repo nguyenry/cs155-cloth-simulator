@@ -88,7 +88,57 @@ def main():
     #  for point in points:
     #    pygame.draw.circle(screen, (255,255,255), (int(point.x),int(point.y)), 2)
     
+    #double sided shenanigans
+    # would recommend running on a smaller sized cloth eg: size = 10
+    '''
+    for i in range(len(cloth.points)-1):
+      for j in range(len(cloth.points[0])-1):
+        v1 = (cloth.points[i][j].x, cloth.points[i][j].y)
+        v2 = (cloth.points[i+1][j].x, cloth.points[i+1][j].y)
+        v3 = (cloth.points[i+1][j+1].x, cloth.points[i+1][j+1].y)
+        v4 = (cloth.points[i][j+1].x, cloth.points[i][j+1].y)
+      
+        magnitude = cloth.length
 
+        #point A
+        Ax = v1[0]
+        Ay = v1[1]
+
+        #point B
+        Bx = v2[0]
+        By = v2[1]
+
+        #point C
+        Cx = v4[0]
+        Cy = v4[1]
+
+        # vector AB
+        ABx = Bx - Ax
+        ABy = By - Ay
+        ABz = math.sqrt(abs(magnitude - (ABx * ABx) - (ABy * ABy)))
+
+        vecAB = [ABx, ABy, ABz]
+
+        # vector AC
+        ACx = Cx - Ax
+        ACy = Cy - Ay
+        ACz = math.sqrt(abs(magnitude - (ACx * ACx) - (ACy * ACy)))
+
+        vecAC = [ACx, ACy, ACz]
+
+        normal = np.cross(vecAB, vecAC)
+
+        angleCompVector = [50, 0, 0]
+
+        angleBetweenVectors = np.dot(normal, angleCompVector)
+
+        if angleBetweenVectors > 50:
+          color = "blue"
+        else:
+          color = "red"
+
+        pygame.draw.polygon(screen, color, (v1,v2,v3,v4), 0)
+    '''
     
     #--- Our edits end here ---
     pygame.display.update()

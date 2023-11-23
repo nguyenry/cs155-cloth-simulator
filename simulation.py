@@ -78,6 +78,9 @@ class Cloth:
     global screen_w, screen_h
     screen_w, screen_h = screen_size
     
+    #used to calculate z position
+    self.length = l
+
     self.points = [[Point(x*l+offset[0],y*l+offset[1]) for x in range(size)] for y in range(size)]
     
     self.links = []
