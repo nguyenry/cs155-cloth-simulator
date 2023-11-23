@@ -148,15 +148,12 @@ def main():
 
       normal = np.cross(vecAB, vecAC)
 
-      # vectors to compare angle difference to normal vector
-      angleCompVectorX = [50, 0, 0]
-      angleCompVectorY = [0, 500, 0]
-
-      angleBetweenVectorsX = np.dot(normal, angleCompVectorX)
-      angleBetweenVectorsY = np.dot(normal, angleCompVectorY)
+      # vector to compare angle difference to normal vector
+      highlightVec = [0,0,50]
+      angleBetweenHighlight = np.dot(normal, highlightVec)
 
       # double sided effect
-      if angleBetweenVectorsX < 70 or angleBetweenVectorsY < 70: #can mess with these numbers if desired
+      if angleBetweenHighlight < 70: #can mess with these numbers if desired
         color = patch.colorb  #back side color
       else:
         color = patch.colorf #front side color
