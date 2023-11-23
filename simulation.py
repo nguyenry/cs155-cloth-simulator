@@ -1,6 +1,7 @@
 import math
+import numpy as np
 
-
+COLLISION_THRESHOLD = 5.0
 class Point:
   def __init__(self, x, y):
     self.x, self.y = x, y
@@ -154,4 +155,4 @@ class Cloth:
     
     for points in self.points:
       for point in points:
-        point.update()
+        point.update()  
