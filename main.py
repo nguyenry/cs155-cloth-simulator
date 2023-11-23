@@ -29,8 +29,8 @@ def main():
   pygame.event.set_allowed([pygame.QUIT, pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP, pygame.KEYDOWN])
 
   #--- Our edits start here ---
-  cloth_size = 20
-  cloth_l = 250/cloth_size
+  cloth_size = 50
+  cloth_l = 500/cloth_size
   c_tear = 10000
 
   amog_img = cv2.imread('amogus.png')  
@@ -101,8 +101,8 @@ def main():
     #    pygame.draw.polygon(screen, patch.color, points, 0)
     
 
-    for link in cloth.links:
-      pygame.draw.line(screen, (100,100,100), (link.p1.x,link.p1.y), (link.p2.x,link.p2.y), 0)
+    #for link in cloth.links:
+    #  pygame.draw.line(screen, (100,100,100), (link.p1.x,link.p1.y), (link.p2.x,link.p2.y), 1)
 
     #for points in cloth.points:
     #  for point in points:
@@ -156,7 +156,7 @@ def main():
 
       points = [(p.x,p.y) for p in patch.points]
       pygame.draw.polygon(screen, color, points, 0)
-    
+  
     
     #--- Our edits end here ---
     pygame.display.update()
