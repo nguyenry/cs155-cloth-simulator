@@ -108,12 +108,8 @@ def main():
     #  for point in points:
     #    pygame.draw.circle(screen, (255,255,255), (int(point.x),int(point.y)), 2)
     
-    #double sided shenanigans
+    # for double sided shenanigans:
     # would recommend running on a smaller sized cloth (10 - 20)
-    # effect is most apparent when lifting cloth from bottom or
-    # grabbing the left or right edge and moving it far left or right
-    # can uncomment to see effect, may need to comment out the patches lines (81-83) first
-    
     
     for patch in cloth.patches:
       [v1, v2, v3, v4] = patch.points
