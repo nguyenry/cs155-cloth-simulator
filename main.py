@@ -29,8 +29,8 @@ def main():
   pygame.event.set_allowed([pygame.QUIT, pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP, pygame.KEYDOWN])
 
   #--- Our edits start here ---
-  cloth_size = 50
-  cloth_l = 500/cloth_size
+  cloth_size = 25
+  cloth_l = 250/cloth_size
   c_tear = 1000
 
   map_img = cv2.imread('amogus.png')  
@@ -78,9 +78,9 @@ def main():
     r,g,b = 100,150,200
     
   
-    for patch in cloth.patches:
-        points = [(p.x,p.y) for p in patch.points]
-        pygame.draw.polygon(screen, patch.color, points, 0)
+    #for patch in cloth.patches:
+    #    points = [(p.x,p.y) for p in patch.points]
+    #    pygame.draw.polygon(screen, patch.color, points, 0)
     
 
     for link in cloth.links:
@@ -96,59 +96,56 @@ def main():
     # grabbing the left or right edge and moving it far left or right
     # can uncomment to see effect, may need to comment out the patches lines (81-83) first
     
-    '''
-    for i in range(len(cloth.points)-1):
-      for j in range(len(cloth.points[0])-1):
-        v1 = (cloth.points[i][j].x, cloth.points[i][j].y)
-        v2 = (cloth.points[i+1][j].x, cloth.points[i+1][j].y)
-        v3 = (cloth.points[i+1][j+1].x, cloth.points[i+1][j+1].y)
-        v4 = (cloth.points[i][j+1].x, cloth.points[i][j+1].y)
+    
+    for patch in cloth.patches:
+      [v1, v2, v3, v4] = patch.points
 
-        #point A
-        Ax = v1[0]
-        Ay = v1[1]
+      #point A
+      Ax = v1.x
+      Ay = v1.y
 
-        #point B
-        Bx = v2[0]
-        By = v2[1]
+      #point B
+      Bx = v2.x
+      By = v2.y
 
-        #point C
-        Cx = v4[0]
-        Cy = v4[1]
+      #point C
+      Cx = v4.x
+      Cy = v4.y
 
-        magnitude = cloth.length
+      magnitude = cloth.length
 
-        # vector AB
-        ABx = Bx - Ax
-        ABy = By - Ay
-        ABz = math.sqrt(abs(magnitude - (ABx * ABx) - (ABy * ABy)))
+      # vector AB
+      ABx = Bx - Ax
+      ABy = By - Ay
+      ABz = math.sqrt(abs(magnitude - (ABx * ABx) - (ABy * ABy)))
 
-        vecAB = [ABx, ABy, ABz]
+      vecAB = [ABx, ABy, ABz]
 
-        # vector AC
-        ACx = Cx - Ax
-        ACy = Cy - Ay
-        ACz = math.sqrt(abs(magnitude - (ACx * ACx) - (ACy * ACy)))
+      # vector AC
+      ACx = Cx - Ax
+      ACy = Cy - Ay
+      ACz = math.sqrt(abs(magnitude - (ACx * ACx) - (ACy * ACy)))
 
-        vecAC = [ACx, ACy, ACz]
+      vecAC = [ACx, ACy, ACz]
 
-        normal = np.cross(vecAB, vecAC)
+      normal = np.cross(vecAB, vecAC)
 
-        # vectors to compare angle difference to normal vector
-        angleCompVectorX = [50, 0, 0]
-        angleCompVectorY = [0, 500, 0]
+      # vectors to compare angle difference to normal vector
+      angleCompVectorX = [50, 0, 0]
+      angleCompVectorY = [0, 500, 0]
 
-        angleBetweenVectorsX = np.dot(normal, angleCompVectorX)
-        angleBetweenVectorsY = np.dot(normal, angleCompVectorY)
+      angleBetweenVectorsX = np.dot(normal, angleCompVectorX)
+      angleBetweenVectorsY = np.dot(normal, angleCompVectorY)
 
-        # double sided effect
-        if angleBetweenVectorsX < 45 or angleBetweenVectorsY < 45: #can mess with these numbers if desired
-          color = "red"  #back side color
-        else:
-          color = "blue" #front side color
+      # double sided effect
+      if angleBetweenVectorsX < 70 or angleBetweenVectorsY < 70: #can mess with these numbers if desired
+        color = patch.color  #back side color
+      else:
+        color = "blue" #front side color
 
-        pygame.draw.polygon(screen, color, (v1,v2,v3,v4), 0)
-    '''
+      points = [(p.x,p.y) for p in patch.points]
+      pygame.draw.polygon(screen, color, points, 0)
+    
     
     #--- Our edits end here ---
     pygame.display.update()
