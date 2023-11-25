@@ -123,7 +123,7 @@ def main():
     screenColor = (cloth.patchesFlipped / 3000 ) * 255 #can mess with the 3000 number, was trying to normalize by amount of patches
     screen.fill((75,10,screenColor)) #can mess with these numbers
 
-    #circle shenangians
+    #circle shenangians - moves up or down based on how much of cloth is flipped
     #can mess with these numbers
     pygame.draw.circle(screen, (255, 255, 200), (2 * screen_w / 3, (screen_h / 3) + cloth.patchesFlipped), 100)
 
