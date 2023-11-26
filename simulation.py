@@ -96,7 +96,7 @@ class Cloth:
     
     for y, row in enumerate(self.points):
       for x, point in enumerate(row):
-        if y == 0:
+        if y == 0: #change to the following to see something cool: (y == 0 and x == 0) or (y == 0 and x == len(row) - 1):
           point.pinned = True
         else:
           if x != 0:
