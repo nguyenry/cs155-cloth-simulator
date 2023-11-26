@@ -98,6 +98,12 @@ class Cloth:
       for x, point in enumerate(row):
         if y == 0: #change to the following to see something cool: (y == 0 and x == 0) or (y == 0 and x == len(row) - 1):
           point.pinned = True
+
+          #rotate cloth 2D - resource: https://danceswithcode.net/engineeringnotes/rotations_in_2d/rotations_in_2d.html 
+          rotationAmount = math.pi/3 #can mess with this number
+          point.x = point.x*math.cos(rotationAmount) - point.y*math.sin(rotationAmount)
+          point.y = point.x*math.sin(rotationAmount) + point.y*math.cos(rotationAmount)
+
         else:
           if x != 0:
             self.links.append(Link(point, row[x-1], l, tear))
