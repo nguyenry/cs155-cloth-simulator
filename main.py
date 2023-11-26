@@ -106,7 +106,7 @@ def main():
       elif event.type == pygame.KEYDOWN:
         if event.key == pygame.K_r:
             cloth = Cloth(size=cloth_size, l=cloth_l, tear=c_tear, offset=cloth_offset, screen_size=(screen_w,screen_h), colors_f = frontColor, colors_b = backColor)
-    
+          
     mouse_pos = pygame.mouse.get_pos()
     
     if drag == True:
