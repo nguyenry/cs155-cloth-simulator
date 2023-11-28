@@ -96,10 +96,19 @@ class Cloth:
     #counts how many patches are showing the backside
     self.patchesFlipped = 0
     
+    #rotate cloth 2D 
+    self.rotationAmount = math.pi / 6 #can mess with this number, nums far from zero (ex: 30 or -30) do interesting things
+
     for y, row in enumerate(self.points):
       for x, point in enumerate(row):
-        if y == 0:
+        if y == 0: #change to the following to see something cool: ((y == 0 and x == 0) or (y == 0 and x == len(row) - 1)):
           point.pinned = True
+
+          #rotate cloth by rotationAmount
+          # equation resource: https://danceswithcode.net/engineeringnotes/rotations_in_2d/rotations_in_2d.html 
+          point.x = point.x*math.cos(self.rotationAmount) - point.y*math.sin(self.rotationAmount)
+          point.y = point.x*math.sin(self.rotationAmount) + point.y*math.cos(self.rotationAmount)
+
         else:
           if x != 0:
             self.links.append(Link(point, row[x-1], l, tear))

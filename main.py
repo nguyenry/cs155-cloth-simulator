@@ -39,6 +39,10 @@ def main():
   flag_img = cv2.resize(flag_img, (cloth_size, cloth_size))  # Resize image to match cloth size
   india_img = cv2.imread('india.png')  
   india_img = cv2.resize(india_img, (cloth_size, cloth_size))  # Resize image to match cloth size
+  sunset_img = cv2.imread('Sunset.png')  
+  sunset_img = cv2.resize(sunset_img, (cloth_size, cloth_size))  # Resize image to match cloth size
+  space_img = cv2.imread('Space.png')  
+  space_img = cv2.resize(space_img, (cloth_size, cloth_size))  # Resize image to match cloth size
   drag = False
   #2d array of colors
   colors_amog = np.zeros((cloth_size,cloth_size,3))
@@ -61,8 +65,30 @@ def main():
       color = india_img[i][j]
       color = (color[2],color[1],color[0])
       colors_ind[i][j] = color
-    
-  cloth = Cloth(size=cloth_size, l=cloth_l, tear=c_tear, offset=(100,20), screen_size=(screen_w,screen_h), colors_f = colors_amog, colors_b = colors_flag)
+
+  colors_sunset = np.zeros((cloth_size,cloth_size,3))
+  for i in range(cloth_size):
+    for j in range(cloth_size):
+      color = sunset_img[i][j]
+      color = (color[2],color[1],color[0])
+      colors_sunset[i][j] = color
+  
+  colors_space = np.zeros((cloth_size,cloth_size,3))
+  for i in range(cloth_size):
+    for j in range(cloth_size):
+      color = space_img[i][j]
+      color = (color[2],color[1],color[0])
+      colors_space[i][j] = color
+
+  #added front/back color and offset as own variables so
+  #when the cloth is reset it remembers what colors it was using and
+  #it remembers the offset
+  frontColor = colors_sunset
+  backColor = colors_space  
+  cloth_offset = (100,20)
+
+  cloth = Cloth(size=cloth_size, l=cloth_l, tear=c_tear, offset=cloth_offset, screen_size=(screen_w,screen_h), colors_f = frontColor, colors_b = backColor)
+  
 
   #--- Our edits end here ---
   while 1:
@@ -79,8 +105,8 @@ def main():
         cloth.end_drag()
       elif event.type == pygame.KEYDOWN:
         if event.key == pygame.K_r:
-            cloth = Cloth(size=cloth_size, l=cloth_l, tear=c_tear, offset=(100,20), screen_size=(screen_w,screen_h), colors_f = colors_amog, colors_b = colors_flag)
-    
+            cloth = Cloth(size=cloth_size, l=cloth_l, tear=c_tear, offset=cloth_offset, screen_size=(screen_w,screen_h), colors_f = frontColor, colors_b = backColor)
+          
     mouse_pos = pygame.mouse.get_pos()
     
     if drag == True:
@@ -95,8 +121,7 @@ def main():
     #change screen color based on what side of the cloth is showing
     #currently: goes from green to blue
     screenColor = (cloth.patchesFlipped / 5000 ) * 255 #can mess with the 5000 number, was trying to normalize by amount of patches
-    #screen.fill((25,50,screenColor)) #can mess with these numbers
-    screen.fill((255,255,255)) 
+    screen.fill((25,50,screenColor)) #can mess with these numbers
 
     r,g,b = 100,150,200
     
@@ -105,9 +130,6 @@ def main():
     #    points = [(p.x,p.y) for p in patch.points]
     #    pygame.draw.polygon(screen, patch.color, points, 0)
     
-
-    #for link in cloth.links:
-    #  pygame.draw.line(screen, (100,100,100), (link.p1.x,link.p1.y), (link.p2.x,link.p2.y), 1)
 
     #for points in cloth.points:
     #  for point in points:
@@ -154,8 +176,9 @@ def main():
       # vector to compare angle difference to normal vector
       highlightVec = [0,0,50]
       angleBetweenHighlight = np.dot(normal, highlightVec)
-
-      
+      #highlight = abs(angleBetweenHighlight)
+      #color = (highlight, 0, 0)
+    
       # double sided effect
       if angleBetweenHighlight < 70: #can mess with these numbers if desired
         color = patch.colorb  #back side color
@@ -171,8 +194,7 @@ def main():
         #if previously flipped, recongize it is no longer flipped
         if patch.flipped == True:
           patch.flipped = False 
-          cloth.patchesFlipped-=1 #unincrement patches flipped
-        
+          cloth.patchesFlipped-=1 #unincrement patches flipped 
 
       points = [(p.x,p.y) for p in patch.points]
       pygame.draw.polygon(screen, color, points, 0)
