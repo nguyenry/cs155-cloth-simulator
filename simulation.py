@@ -1,7 +1,7 @@
 import math
 import numpy as np
 
-COLLISION_THRESHOLD = 5.0
+COLLISION_THRESHOLD = 0.1
 class Point:
   def __init__(self, x, y):
     self.x, self.y = x, y
@@ -30,6 +30,7 @@ class Point:
       
       self.lx, self.ly = self.x, self.y
       self.x, self.y = nx, ny
+      
 
 
 class Link:
@@ -57,6 +58,7 @@ class Link:
       if self.p2.pinned == False and self.p1.drag == False:
         self.p2.x -= dx
         self.p2.y -= dy
+      
 #--- Our edits start here ---
 class Patch:
   def __init__(self, top, bottom, left, right, color_f=(255,255,255), color_b=(255,255,255)):
@@ -74,7 +76,7 @@ class Patch:
       self.broken = True
       return
     else:
-      self.points = [self.top.p2, self.right.p2, self.bottom.p1, self.left.p1]
+      self.points = [self.top.p2, self.right.p2, self.bottom.p1, self.left.p1]   
     pass
 #--- Our edits end here ---
 class Cloth:
@@ -156,6 +158,56 @@ class Cloth:
           self.patches.remove(patch)
         else:
           patch.solve()
+      for patch in self.patches:
+        for point in patch.points:
+          for other_patch in self.patches:
+            if other_patch != patch:
+              #check if point is inside other_patch
+              #https://stackoverflow.com/questions/2752725/finding-whether-a-point-lies-inside-a-rectangle-or-not
+              # ^ for formula
+              p_points = [(p.x,p.y) for p in other_patch.points]
+              p_points.append(p_points[0])
+              inside = False
+              x,y = point.x, point.y
+              for i in range(len(p_points)-1):
+                if ((p_points[i][1] > y) != (p_points[i+1][1] > y)) and (x < (p_points[i+1][0]-p_points[i][0]) * (y-p_points[i][1]) / (p_points[i+1][1]-p_points[i][1]) + p_points[i][0]):
+                  inside = not inside
+              if inside == True:
+                #check if point is closer to front or back of patch
+                p1, p2 = other_patch.points[0], other_patch.points[1]
+                dist = abs((p2.y-p1.y)*x - (p2.x-p1.x)*y + p2.x*p1.y - p2.y*p1.x) / math.dist((p1.x,p1.y), (p2.x,p2.y))
+                if dist < COLLISION_THRESHOLD:
+                  if patch.flipped == other_patch.flipped:
+                    #patch is showing same side as other_patch
+                    #check if patch is closer to front or back of other_patch
+                    p1, p2 = patch.points[0], patch.points[1]
+                    dist = abs((p2.y-p1.y)*x - (p2.x-p1.x)*y + p2.x*p1.y - p2.y*p1.x) / math.dist((p1.x,p1.y), (p2.x,p2.y))
+                    if dist < COLLISION_THRESHOLD:
+                      #patch is closer to front of other_patch
+                      #flip patch
+                      patch.flipped = not patch.flipped
+                      self.patchesFlipped += 1
+                    else:
+                      #patch is closer to back of other_patch
+                      #do nothing
+                      pass
+                  else:
+                    #patch is showing opposite side as other_patch
+                    #check if patch is closer to front or back of other_patch
+                    p1, p2 = patch.points[0], patch.points[1]
+                    dist = abs((p2.y-p1.y)*x - (p2.x-p1.x)*y + p2.x*p1.y - p2.y*p1.x) / math.dist((p1.x,p1.y), (p2.x,p2.y))
+                    if dist < COLLISION_THRESHOLD:
+                      #patch is closer to front of other_patch
+                      #do nothing
+                      pass
+                    else:
+                      #patch is closer to back of other_patch
+                      #flip patch
+                      patch.flipped = not patch.flipped
+                      self.patchesFlipped -= 1
+              else:
+                pass
+                    
       #--- Our edits end here ---
     
     for points in self.points:

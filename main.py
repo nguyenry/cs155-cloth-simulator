@@ -29,7 +29,7 @@ def main():
   pygame.event.set_allowed([pygame.QUIT, pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP, pygame.KEYDOWN])
 
   #--- Our edits start here ---
-  cloth_size = 50
+  cloth_size = 20
   cloth_l = 500/cloth_size
   c_tear = 10000
 
@@ -95,7 +95,8 @@ def main():
     #change screen color based on what side of the cloth is showing
     #currently: goes from green to blue
     screenColor = (cloth.patchesFlipped / 5000 ) * 255 #can mess with the 5000 number, was trying to normalize by amount of patches
-    screen.fill((25,50,screenColor)) #can mess with these numbers
+    #screen.fill((25,50,screenColor)) #can mess with these numbers
+    screen.fill((255,255,255)) 
 
     r,g,b = 100,150,200
     
