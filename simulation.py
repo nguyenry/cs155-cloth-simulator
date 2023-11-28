@@ -1,32 +1,33 @@
 import math
 import numpy as np
 
-COLLISION_THRESHOLD = 0.1
+COLLISION_THRESHOLD = 5
 class Point:
   def __init__(self, x, y):
     self.x, self.y = x, y
     self.lx, self.ly = x, y
+    self.vx, self.vy = 0, 0
     self.pinned = False
     self.drag = False
   
   def update(self, ax = 0, ay = 0.5, max_a = 15):
     if self.pinned == False:
-      vx, vy = min(self.x - self.lx, max_a), min(self.y - self.ly, max_a)
+      self.vx, self.vy = min(self.x - self.lx, max_a), min(self.y - self.ly, max_a)
       
       if self.x > screen_w:
         self.x = screen_w
-        vx *= -0.3
+        self.vx *= -0.3
       elif self.x < 0:
         self.x = 0
-        vx *= -0.3
+        self.vx *= -0.3
       if self.y > screen_h:
         self.y = screen_h
-        vy *= -0.3
+        self.vy *= -0.3
       elif self.y < 0:
         self.y = 0
-        vy *= -0.3
+        self.vy *= -0.3
       
-      nx, ny = self.x + vx + ax, self.y + vy + ay
+      nx, ny = self.x + self.vx + ax, self.y + self.vy + ay
       
       self.lx, self.ly = self.x, self.y
       self.x, self.y = nx, ny
@@ -97,7 +98,7 @@ class Cloth:
     self.patchesFlipped = 0
     
     #rotate cloth 2D 
-    self.rotationAmount = math.pi / 6 #can mess with this number, nums far from zero (ex: 30 or -30) do interesting things
+    self.rotationAmount = 0*math.pi / 6 #can mess with this number, nums far from zero (ex: 30 or -30) do interesting things
 
     for y, row in enumerate(self.points):
       for x, point in enumerate(row):
@@ -166,57 +167,30 @@ class Cloth:
         if patch.broken == True:
           self.patches.remove(patch)
         else:
-          patch.solve()
-      for patch in self.patches:
-        for point in patch.points:
-          for other_patch in self.patches:
-            if other_patch != patch:
-              #check if point is inside other_patch
-              #https://stackoverflow.com/questions/2752725/finding-whether-a-point-lies-inside-a-rectangle-or-not
-              # ^ for formula
-              p_points = [(p.x,p.y) for p in other_patch.points]
-              p_points.append(p_points[0])
-              inside = False
-              x,y = point.x, point.y
-              for i in range(len(p_points)-1):
-                if ((p_points[i][1] > y) != (p_points[i+1][1] > y)) and (x < (p_points[i+1][0]-p_points[i][0]) * (y-p_points[i][1]) / (p_points[i+1][1]-p_points[i][1]) + p_points[i][0]):
-                  inside = not inside
-              if inside == True:
-                #check if point is closer to front or back of patch
-                p1, p2 = other_patch.points[0], other_patch.points[1]
-                dist = abs((p2.y-p1.y)*x - (p2.x-p1.x)*y + p2.x*p1.y - p2.y*p1.x) / math.dist((p1.x,p1.y), (p2.x,p2.y))
-                if dist < COLLISION_THRESHOLD:
-                  if patch.flipped == other_patch.flipped:
-                    #patch is showing same side as other_patch
-                    #check if patch is closer to front or back of other_patch
-                    p1, p2 = patch.points[0], patch.points[1]
-                    dist = abs((p2.y-p1.y)*x - (p2.x-p1.x)*y + p2.x*p1.y - p2.y*p1.x) / math.dist((p1.x,p1.y), (p2.x,p2.y))
-                    if dist < COLLISION_THRESHOLD:
-                      #patch is closer to front of other_patch
-                      #flip patch
-                      patch.flipped = not patch.flipped
-                      self.patchesFlipped += 1
-                    else:
-                      #patch is closer to back of other_patch
-                      #do nothing
-                      pass
-                  else:
-                    #patch is showing opposite side as other_patch
-                    #check if patch is closer to front or back of other_patch
-                    p1, p2 = patch.points[0], patch.points[1]
-                    dist = abs((p2.y-p1.y)*x - (p2.x-p1.x)*y + p2.x*p1.y - p2.y*p1.x) / math.dist((p1.x,p1.y), (p2.x,p2.y))
-                    if dist < COLLISION_THRESHOLD:
-                      #patch is closer to front of other_patch
-                      #do nothing
-                      pass
-                    else:
-                      #patch is closer to back of other_patch
-                      #flip patch
-                      patch.flipped = not patch.flipped
-                      self.patchesFlipped -= 1
-              else:
-                pass
-                    
+          patch.solve()  
+      #check if patches intersect each other
+      #if they do, change the velocities of the points so they move away from each other
+      for i in range(len(self.patches)):
+        for j in range(i+1, len(self.patches)):
+          patch1 = self.patches[i]
+          patch2 = self.patches[j]
+          intersect = False
+          #intersect is boolean if two patches intersect and are different flips
+          #if they are the same flip, they don't intersect
+          #check if patches intersect
+          for point1 in patch1.points:
+            for point2 in patch2.points:
+              if math.dist((point1.x,point1.y), (point2.x,point2.y)) < COLLISION_THRESHOLD:
+                if patch1.flipped != patch2.flipped:
+                  intersect = True
+          if (intersect):
+            #if they do, change the velocities of the points so they move away from each other
+            for point in patch1.points:
+              point.vx -=1
+              point.vy -=1
+            for point in patch2.points:
+              point.vx +=1
+              point.vy +=1
       #--- Our edits end here ---
     
     for points in self.points:

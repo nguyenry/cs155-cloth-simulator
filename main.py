@@ -29,7 +29,7 @@ def main():
   pygame.event.set_allowed([pygame.QUIT, pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP, pygame.KEYDOWN])
 
   #--- Our edits start here ---
-  cloth_size = 6
+  cloth_size = 10
   cloth_l = 500/cloth_size
   c_tear = 10000
 
