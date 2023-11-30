@@ -1,12 +1,13 @@
 import math
 import numpy as np
 
-COLLISION_THRESHOLD = 5
+COLLISION_THRESHOLD = 20
 class Point:
   def __init__(self, x, y):
     self.x, self.y = x, y
     self.lx, self.ly = x, y
     self.vx, self.vy = 0, 0
+    self.z = 0
     self.pinned = False
     self.drag = False
   
@@ -32,6 +33,8 @@ class Point:
       self.lx, self.ly = self.x, self.y
       self.x, self.y = nx, ny
       
+      length = math.dist((self.x,self.y), (self.lx,self.ly))
+      self.z = (self.x**2 + self.y**2) / (length)
 
 
 class Link:
@@ -68,6 +71,7 @@ class Patch:
     self.broken = False
     self.colorf = color_f
     self.colorb = color_b
+    self.z = (self.top.p1.z + self.top.p2.z + self.bottom.p1.z + self.bottom.p2.z)/4
     #represents if patch is showing backside
     self.flipped = False
   
@@ -78,6 +82,7 @@ class Patch:
       return
     else:
       self.points = [self.top.p2, self.right.p2, self.bottom.p1, self.left.p1]   
+      self.z = (self.top.p1.z + self.top.p2.z + self.bottom.p1.z + self.bottom.p2.z)/4
     pass
 #--- Our edits end here ---
 class Cloth:
@@ -168,29 +173,19 @@ class Cloth:
           self.patches.remove(patch)
         else:
           patch.solve()  
-      #check if patches intersect each other
-      #if they do, change the velocities of the points so they move away from each other
-      for i in range(len(self.patches)):
-        for j in range(i+1, len(self.patches)):
-          patch1 = self.patches[i]
-          patch2 = self.patches[j]
-          intersect = False
-          #intersect is boolean if two patches intersect and are different flips
-          #if they are the same flip, they don't intersect
-          #check if patches intersect
-          for point1 in patch1.points:
-            for point2 in patch2.points:
-              if math.dist((point1.x,point1.y), (point2.x,point2.y)) < COLLISION_THRESHOLD:
-                if patch1.flipped != patch2.flipped:
-                  intersect = True
-          if (intersect):
-            #if they do, change the velocities of the points so they move away from each other
-            for point in patch1.points:
-              point.vx -=1
-              point.vy -=1
-            for point in patch2.points:
-              point.vx +=1
-              point.vy +=1
+      for i1 in range(len(self.points)):
+        for j1 in range(len(self.points[0])):
+          for i2 in range(len(self.points)):
+            for j2 in range(len(self.points[0])):
+              p1 = self.points[i1][j1]
+              p2 = self.points[i2][j2]
+              if(p1!=p2):
+                if(abs(p1.z-p2.z)<COLLISION_THRESHOLD):
+                  p1.vx = -p1.vx
+                  p1.vy = -p1.vy
+                  p2.vx = -p2.vx
+                  p2.vy = -p2.vy
+      self.patches.sort(key = lambda x: x.z)
       #--- Our edits end here ---
     
     for points in self.points:

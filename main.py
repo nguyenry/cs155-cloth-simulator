@@ -29,7 +29,7 @@ def main():
   pygame.event.set_allowed([pygame.QUIT, pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP, pygame.KEYDOWN])
 
   #--- Our edits start here ---
-  cloth_size = 10
+  cloth_size = 20
   cloth_l = 500/cloth_size
   c_tear = 10000
 
@@ -139,7 +139,7 @@ def main():
     # would recommend running on a smaller sized cloth (10 - 20)
     
     
-
+  
     for patch in cloth.patches:
       [v1, v2, v3, v4] = patch.points
 
