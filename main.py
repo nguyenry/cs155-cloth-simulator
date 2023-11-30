@@ -31,7 +31,7 @@ def main():
   #--- Our edits start here ---
   cloth_size = 20
   cloth_l = 500/cloth_size
-  c_tear = 10000
+  c_tear = 1000
 
   amog_img = cv2.imread('amogus.png')  
   amog_img = cv2.resize(amog_img, (cloth_size, cloth_size))  # Resize image to match cloth size
@@ -139,7 +139,7 @@ def main():
     # would recommend running on a smaller sized cloth (10 - 20)
     
     
-  
+
     for patch in cloth.patches:
       [v1, v2, v3, v4] = patch.points
 

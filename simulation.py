@@ -1,7 +1,7 @@
 import math
 import numpy as np
 
-COLLISION_THRESHOLD = 20
+COLLISION_THRESHOLD = 100
 class Point:
   def __init__(self, x, y):
     self.x, self.y = x, y
@@ -34,7 +34,7 @@ class Point:
       self.x, self.y = nx, ny
       
       length = math.dist((self.x,self.y), (self.lx,self.ly))
-      self.z = (self.x**2 + self.y**2) / (length)
+      self.z = (self.x**2 + self.y**2) / (length+1)
 
 
 class Link:
@@ -173,19 +173,29 @@ class Cloth:
           self.patches.remove(patch)
         else:
           patch.solve()  
-      for i1 in range(len(self.points)):
-        for j1 in range(len(self.points[0])):
-          for i2 in range(len(self.points)):
-            for j2 in range(len(self.points[0])):
-              p1 = self.points[i1][j1]
-              p2 = self.points[i2][j2]
-              if(p1!=p2):
-                if(abs(p1.z-p2.z)<COLLISION_THRESHOLD):
-                  p1.vx = -p1.vx
-                  p1.vy = -p1.vy
-                  p2.vx = -p2.vx
-                  p2.vy = -p2.vy
-      self.patches.sort(key = lambda x: x.z)
+      for patch1 in self.patches:
+        for patch2 in self.patches:
+          if patch1 != patch2:
+            if abs(patch1.z- patch2.z) < COLLISION_THRESHOLD:
+              temp1 = patch1.points.copy()
+              temp2 = patch2.points.copy()
+              patch1.points[0].vx = temp2[0].vx
+              patch1.points[0].vy = temp2[0].vy
+              patch1.points[1].vx = temp2[1].vx
+              patch1.points[1].vy = temp2[1].vy
+              patch1.points[2].vx = temp2[2].vx
+              patch1.points[2].vy = temp2[2].vy
+              patch1.points[3].vx = temp2[3].vx
+              patch1.points[3].vy = temp2[3].vy
+              patch2.points[0].vx = temp1[0].vx
+              patch2.points[0].vy = temp1[0].vy
+              patch2.points[1].vx = temp1[1].vx
+              patch2.points[1].vy = temp1[1].vy
+              patch2.points[2].vx = temp1[2].vx
+              patch2.points[2].vy = temp1[2].vy
+              patch2.points[3].vx = temp1[3].vx
+              patch2.points[3].vy = temp1[3].vy
+
       #--- Our edits end here ---
     
     for points in self.points:
