@@ -195,7 +195,7 @@ class Cloth:
               patch2.points[2].vy = temp1[2].vy
               patch2.points[3].vx = temp1[3].vx
               patch2.points[3].vy = temp1[3].vy
-
+      self.patches.sort(key=lambda x: x.z)
       #--- Our edits end here ---
     
     for points in self.points:
