@@ -203,7 +203,7 @@ def main():
 
     #particle effects shenanigans
     # it's currently giving pepto
-    # if someone know, could you make the circles appear in
+    # if someone knows, could you make the circles appear in
     #  more random places (mini sparkles effect is what I am thinking)
     for points in cloth.points:
       for point in points:
