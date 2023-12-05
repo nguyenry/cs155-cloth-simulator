@@ -95,7 +95,7 @@ class Cloth:
     self.patchesFlipped = 0
     
     #rotate cloth 2D 
-    self.rotationAmount = math.pi / 6 #can mess with this number, nums far from zero (ex: 30 or -30) do interesting things
+    self.rotationAmount = math.pi / 6 #can mess with this number, should be in format math.pi / x where x is some int, nums far from zero (ex: 30 or -30) do interesting things
 
     for y, row in enumerate(self.points):
       for x, point in enumerate(row):

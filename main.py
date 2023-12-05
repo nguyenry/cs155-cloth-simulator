@@ -202,14 +202,34 @@ def main():
   
 
     #particle effects shenanigans
+    #can mess with all of the numbers
     # it's currently giving pepto
-    # if someone knows, could you make the circles appear in
-    #  more random places (mini sparkles effect is what I am thinking)
+
+    colShift = 0
+
     for points in cloth.points:
       for point in points:
         if int(point.y) > 300: #dipped effect, can remove or mess with this number or .x vs. .y
-          for i in range(5): #can mess with this number
-            pygame.draw.circle(screen, (255,40*i,255), (int(point.x) + i*5,int(point.y) + i*3), 20) #can mess with these as well
+          for i in range(5): 
+            
+            #sherbert effect:
+            #pygame.draw.circle(screen, (255, colShift, 255 - colShift), (int(point.x) + i*5,int(point.y) + i*3), 20)
+
+            #puffy pepto puffer effect:
+            pygame.draw.circle(screen, (255,40*i,255), (int(point.x) + i*5,int(point.y) + i*3), 20)
+
+            #purple puff effect:
+            #pygame.draw.circle(screen, (30*i,20,255), (int(point.x) + i*3,int(point.y) + i*3), 40 - (i * 5))
+
+            #sparkly effect:
+            r = random.random()
+            #pygame.draw.circle(screen, (255,255,255), (int(point.x) + i*5,int(point.y) + i*10 * r), 2 * r) 
+
+            #control color shift
+            if colShift > 254:
+              colShift = 0
+            else:
+              colShift+=1
 
     #--- Our edits end here ---
     pygame.display.update()
