@@ -1,40 +1,35 @@
 import math
 import numpy as np
 
-COLLISION_THRESHOLD = 100
+COLLISION_THRESHOLD = 5.0
 class Point:
   def __init__(self, x, y):
     self.x, self.y = x, y
     self.lx, self.ly = x, y
-    self.vx, self.vy = 0, 0
-    self.z = 0
     self.pinned = False
     self.drag = False
   
   def update(self, ax = 0, ay = 0.5, max_a = 15):
     if self.pinned == False:
-      self.vx, self.vy = min(self.x - self.lx, max_a), min(self.y - self.ly, max_a)
+      vx, vy = min(self.x - self.lx, max_a), min(self.y - self.ly, max_a)
       
       if self.x > screen_w:
         self.x = screen_w
-        self.vx *= -0.3
+        vx *= -0.3
       elif self.x < 0:
         self.x = 0
-        self.vx *= -0.3
+        vx *= -0.3
       if self.y > screen_h:
         self.y = screen_h
-        self.vy *= -0.3
+        vy *= -0.3
       elif self.y < 0:
         self.y = 0
-        self.vy *= -0.3
+        vy *= -0.3
       
-      nx, ny = self.x + self.vx + ax, self.y + self.vy + ay
+      nx, ny = self.x + vx + ax, self.y + vy + ay
       
       self.lx, self.ly = self.x, self.y
       self.x, self.y = nx, ny
-      
-      length = math.dist((self.x,self.y), (self.lx,self.ly))
-      self.z = (self.x**2 + self.y**2) / (length+1)
 
 
 class Link:
@@ -62,7 +57,6 @@ class Link:
       if self.p2.pinned == False and self.p1.drag == False:
         self.p2.x -= dx
         self.p2.y -= dy
-      
 #--- Our edits start here ---
 class Patch:
   def __init__(self, top, bottom, left, right, color_f=(255,255,255), color_b=(255,255,255)):
@@ -71,7 +65,6 @@ class Patch:
     self.broken = False
     self.colorf = color_f
     self.colorb = color_b
-    self.z = (self.top.p1.z + self.top.p2.z + self.bottom.p1.z + self.bottom.p2.z)/4
     #represents if patch is showing backside
     self.flipped = False
   
@@ -81,8 +74,7 @@ class Patch:
       self.broken = True
       return
     else:
-      self.points = [self.top.p2, self.right.p2, self.bottom.p1, self.left.p1]   
-      self.z = (self.top.p1.z + self.top.p2.z + self.bottom.p1.z + self.bottom.p2.z)/4
+      self.points = [self.top.p2, self.right.p2, self.bottom.p1, self.left.p1]
     pass
 #--- Our edits end here ---
 class Cloth:
@@ -103,7 +95,7 @@ class Cloth:
     self.patchesFlipped = 0
     
     #rotate cloth 2D 
-    self.rotationAmount = 0*math.pi / 6 #can mess with this number, nums far from zero (ex: 30 or -30) do interesting things
+    self.rotationAmount = math.pi / 6 #can mess with this number, nums far from zero (ex: 30 or -30) do interesting things
 
     for y, row in enumerate(self.points):
       for x, point in enumerate(row):
@@ -172,30 +164,7 @@ class Cloth:
         if patch.broken == True:
           self.patches.remove(patch)
         else:
-          patch.solve()  
-      for patch1 in self.patches:
-        for patch2 in self.patches:
-          if patch1 != patch2:
-            if abs(patch1.z- patch2.z) < COLLISION_THRESHOLD:
-              temp1 = patch1.points.copy()
-              temp2 = patch2.points.copy()
-              patch1.points[0].vx = temp2[0].vx
-              patch1.points[0].vy = temp2[0].vy
-              patch1.points[1].vx = temp2[1].vx
-              patch1.points[1].vy = temp2[1].vy
-              patch1.points[2].vx = temp2[2].vx
-              patch1.points[2].vy = temp2[2].vy
-              patch1.points[3].vx = temp2[3].vx
-              patch1.points[3].vy = temp2[3].vy
-              patch2.points[0].vx = temp1[0].vx
-              patch2.points[0].vy = temp1[0].vy
-              patch2.points[1].vx = temp1[1].vx
-              patch2.points[1].vy = temp1[1].vy
-              patch2.points[2].vx = temp1[2].vx
-              patch2.points[2].vy = temp1[2].vy
-              patch2.points[3].vx = temp1[3].vx
-              patch2.points[3].vy = temp1[3].vy
-      self.patches.sort(key=lambda x: x.z)
+          patch.solve()
       #--- Our edits end here ---
     
     for points in self.points:

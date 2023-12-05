@@ -131,9 +131,10 @@ def main():
     #    pygame.draw.polygon(screen, patch.color, points, 0)
     
 
-    #for points in cloth.points:
-    #  for point in points:
-    #    pygame.draw.circle(screen, (255,255,255), (int(point.x),int(point.y)), 2)
+    for points in cloth.points:
+      for point in points:
+        if int(point.y) == 1:
+          pygame.draw.circle(screen, (255,255,255), (int(point.x),int(point.y)), 20)
     
     # for double sided shenanigans:
     # would recommend running on a smaller sized cloth (10 - 20)
@@ -199,7 +200,17 @@ def main():
       points = [(p.x,p.y) for p in patch.points]
       pygame.draw.polygon(screen, color, points, 0)
   
-    
+
+    #particle effects shenanigans
+    # it's currently giving pepto
+    # if someone know, could you make the circles appear in
+    #  more random places (mini sparkles effect is what I am thinking)
+    for points in cloth.points:
+      for point in points:
+        if int(point.y) > 300: #dipped effect, can remove or mess with this number or .x vs. .y
+          for i in range(5): #can mess with this number
+            pygame.draw.circle(screen, (255,40*i,255), (int(point.x) + i*5,int(point.y) + i*3), 20) #can mess with these as well
+
     #--- Our edits end here ---
     pygame.display.update()
     clock.tick(30)
