@@ -130,17 +130,56 @@ def main():
     #    points = [(p.x,p.y) for p in patch.points]
     #    pygame.draw.polygon(screen, patch.color, points, 0)
     
+    #2D SPHERE
+    #2D sphere info
+    sphereXpos = 2* screen_w / 3
+    sphereYpos = screen_h / 3
+    radius = 100
 
-    for points in cloth.points:
-      for point in points:
-        if int(point.y) == 1:
-          pygame.draw.circle(screen, (255,255,255), (int(point.x),int(point.y)), 20)
+    #to make this optimized for the cloth
+    #   need to find a way to make size dependent on the angle of normal vector
+    #   of each patch
+    size = (cloth.patchesFlipped + 100) / 2  # size of oval = amount of rotation effect
+    topColor = "red"
+    bottomColor = "blue"
+
+    #2D sphere top half
+    pygame.draw.circle(screen, 
+                       topColor, 
+                       (sphereXpos, sphereYpos), 
+                       radius,
+                       draw_top_left=True,
+                       draw_top_right= True)
+    
+    #2D sphere bottom half
+    pygame.draw.circle(screen, 
+                       bottomColor, 
+                       (sphereXpos, sphereYpos), 
+                       radius,
+                       draw_bottom_left=True,
+                       draw_bottom_right= True)
+    
+    #2D sphere rectangle bounding oval
+    ovalBounding = pygame.Rect(sphereXpos - radius, 
+                               sphereYpos - (size / 2), 
+                               radius * 2, 
+                               size)
+    #2D sphere dynamic oval
+    if cloth.patchesFlipped < 100:
+      #show more of top
+      pygame.draw.ellipse(screen, 
+                        topColor, 
+                        ovalBounding)
+    else:
+      #show more of bottom
+      pygame.draw.ellipse(screen, 
+                        bottomColor, 
+                        ovalBounding)
+
     
     # for double sided shenanigans:
     # would recommend running on a smaller sized cloth (10 - 20)
     
-    
-
     for patch in cloth.patches:
       [v1, v2, v3, v4] = patch.points
 
