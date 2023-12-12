@@ -31,7 +31,7 @@ def main():
   #--- Our edits start here ---
   cloth_size = 20
   cloth_l = 500/cloth_size
-  c_tear = 1000
+  c_tear = 100
 
   amog_img = cv2.imread('amogus.png')  
   amog_img = cv2.resize(amog_img, (cloth_size, cloth_size))  # Resize image to match cloth size
@@ -255,10 +255,10 @@ def main():
             #pygame.draw.circle(screen, (255, colShift, 255 - colShift), (int(point.x) + i*5,int(point.y) + i*3), 20)
 
             #puffy pepto puffer effect:
-            pygame.draw.circle(screen, (255,40*i,255), (int(point.x) + i*5,int(point.y) + i*3), 20)
+            #pygame.draw.circle(screen, (255,40*i,255), (int(point.x) + i*5,int(point.y) + i*3), 20)
 
             #purple puff effect:
-            #pygame.draw.circle(screen, (30*i,20,255), (int(point.x) + i*3,int(point.y) + i*3), 40 - (i * 5))
+            pygame.draw.circle(screen, (30*i,20,255), (int(point.x) + i*3,int(point.y) + i*3), 40 - (i * 5))
 
             #sparkly effect:
             r = random.random()
