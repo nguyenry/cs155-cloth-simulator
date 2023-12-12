@@ -187,7 +187,7 @@ class Cloth:
           self.links.append(Link(point, self.points[y-1][x], l, tear))
     
     #--- Our edits start here ---
-    #initialize patches
+    #initialize patches, based on points and links
     for i in range(size-1):
       link = Link(self.points[0][i+1], self.points[0][i], l, tear)
       top = link
@@ -212,6 +212,7 @@ class Cloth:
     for points in self.points:
       for point in points:
         if point.pinned == False:
+          #if a point is able to move, check if mouse is within drag_radius of point
           if math.dist((point.x,point.y), pos) < drag_radius:
             point.drag = True
             point.drag_pos = (point.x, point.y)
@@ -226,6 +227,7 @@ class Cloth:
   
   def drag(self, dx, dy):
     for point in self.dragging:
+      #if point is being dragged, update its position
       if point.drag == True:
         point.x = point.drag_pos[0] + dx
         point.y = point.drag_pos[1] + dy
@@ -240,6 +242,7 @@ class Cloth:
       #--- Our edits start here ---
       for patch in self.patches:
         if patch.broken == True:
+          #don't show broken patches
           self.patches.remove(patch)
         else:
           patch.solve()
