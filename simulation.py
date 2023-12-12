@@ -2,17 +2,33 @@ import math
 import numpy as np
 
 COLLISION_THRESHOLD = 5.0
+
+#Point Class: Consider the cloth as a large grid. Point creates the points that
+  #comprise the corners of each square in the cloth grid
+  #INPUTS:
+    # x: desired x-position of point
+    # y: desired y-position of point
+
 class Point:
   def __init__(self, x, y):
+    #x and y position of point
     self.x, self.y = x, y
+
+    #x and y position of point for velocity calculations
     self.lx, self.ly = x, y
+
+    #determines if we can drag point
     self.pinned = False
+
+    #determines if point is currently being dragged
     self.drag = False
   
   def update(self, ax = 0, ay = 0.5, max_a = 15):
     if self.pinned == False:
+      #velocity of point
       vx, vy = min(self.x - self.lx, max_a), min(self.y - self.ly, max_a)
       
+      #collision check for edge of screen
       if self.x > screen_w:
         self.x = screen_w
         vx *= -0.3
@@ -26,17 +42,32 @@ class Point:
         self.y = 0
         vy *= -0.3
       
+      #new x and y position after change from velocity
       nx, ny = self.x + vx + ax, self.y + vy + ay
       
+      #update x and y accordingly after change from velocity
       self.lx, self.ly = self.x, self.y
       self.x, self.y = nx, ny
 
 
+#Link Class: creates a line between two adjacent points that are 
+  #horizontally or vertically adjacent
+  #creates the lines for each sqaure on the cloth grid
+  #INPUTS:
+    # p1: point at start of link line
+    # p2: point at end of link line
+    # d: initial distance between p1 and p2 (length of link line)
+    # t: distance between p1 and p2 that causes link to tear
+
 class Link:
   def __init__(self, p1, p2, d, t):
+    #place inputs into link 
     self.p1, self.p2, self.d, self.t = p1, p2, d, t
+
+    #determines if link has been broken (cloth has been torn)
     self.broken = False
   
+  #calculates if link should tear based on distance between p1 and p2
   def solve(self):
     dist_x = self.p1.x - self.p2.x
     dist_y = self.p1.y - self.p2.y
@@ -57,14 +88,35 @@ class Link:
       if self.p2.pinned == False and self.p1.drag == False:
         self.p2.x -= dx
         self.p2.y -= dy
+
 #--- Our edits start here ---
+
+#Patch Class: creates a "patch" for each sqaure (four links in a sqaure) in the cloth grid
+#INPUTS:
+    # top: top link of patch
+    # bottom: bottom link of patch
+    # left: left link of patch
+    # right: right link of patch
+    # color_f: front color of the patch
+    # color_b: back color of the patch
+
 class Patch:
   def __init__(self, top, bottom, left, right, color_f=(255,255,255), color_b=(255,255,255)):
+    #links that comprise the patch
     self.top, self.bottom, self.left, self.right = top, bottom, left, right
+
+    #corner points that comprise the patch
     self.points = [self.top.p2, self.right.p2, self.bottom.p1, self.left.p1]
+
+    #determines if patch is broken (cloth torn)
     self.broken = False
+
+    #front color of patch
     self.colorf = color_f
+
+    #back color of patch
     self.colorb = color_b
+
     #represents if patch is showing backside
     self.flipped = False
   
@@ -77,6 +129,13 @@ class Patch:
       self.points = [self.top.p2, self.right.p2, self.bottom.p1, self.left.p1]
     pass
 #--- Our edits end here ---
+
+#Cloth Class: generates a cloth based on the initialized points, links, and patches.
+  # can control the length, size and offset of the cloth of the screen
+  # for each point in the cloth grid, creates a link between horizontally and vertically adjacent points
+  # such that their movement is connected
+  # creates patches from the squares created by each group of top, bottom, left,and right links
+  
 class Cloth:
   def __init__(self, size=15, l=10, tear=50, offset=(0,0), screen_size=(500,300), colors_f = [[(255,255,255) for i in range(15)] for j in range(15)], colors_b = [[(255,255,255) for i in range(15)] for j in range(15)]):
     global screen_w, screen_h
@@ -90,6 +149,8 @@ class Cloth:
     self.links = []
 
     self.patches = []
+
+    self.patchesAmount = 0
 
     #counts how many patches are showing the backside
     self.patchesFlipped = 0
@@ -127,6 +188,8 @@ class Cloth:
         bottom = self.links[j*2+i*(2*(size-1)+1)+1]
         right = self.links[j*2+i*(2*(size-1)+1)+2]
         self.patches.append(Patch(top, bottom, left, right, colors_f[i][j], colors_b[i][j]))
+
+    self.patchesAmount = len(self.patches)
     #--- Our edits end here ---
     self.dragging = []
   
