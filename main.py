@@ -272,7 +272,7 @@ def main():
             #pygame.draw.circle(screen, (255,40*i,255), (int(point.x) + i*5,int(point.y) + i*3), 20)
 
             #purple puff effect:
-            pygame.draw.circle(screen, (30*i,20,255), (int(point.x) + i*3,int(point.y) + i*3), 40 - (i * 5))
+            #pygame.draw.circle(screen, (30*i,20,255), (int(point.x) + i*3,int(point.y) + i*3), 40 - (i * 5))
 
             #sparkly effect:
             r = random.random()
