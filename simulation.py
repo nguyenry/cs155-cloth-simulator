@@ -131,25 +131,37 @@ class Patch:
 #--- Our edits end here ---
 
 #Cloth Class: generates a cloth based on the initialized points, links, and patches.
-  # can control the length, size and offset of the cloth of the screen
+  # can control the length, rotation, size and offset of the cloth of the screen
   # for each point in the cloth grid, creates a link between horizontally and vertically adjacent points
   # such that their movement is connected
   # creates patches from the squares created by each group of top, bottom, left,and right links
-  
+# INPUTS:
+  # size: amount of points in width of cloth gird
+  # l: length between each point
+  # tear: distance between adjacent points that results in a tear
+  # offset: pixel offset cloth should be drawn from the top left corner (0,0)
+  # screen_size: size of pygame window screen
+  # colors_f: array of colors of patches on front of cloth
+  # colors_b: array of colors of patches on back of cloth
+
 class Cloth:
   def __init__(self, size=15, l=10, tear=50, offset=(0,0), screen_size=(500,300), colors_f = [[(255,255,255) for i in range(15)] for j in range(15)], colors_b = [[(255,255,255) for i in range(15)] for j in range(15)]):
     global screen_w, screen_h
     screen_w, screen_h = screen_size
     
-    #used to calculate z position
+    #used to calculate z position for patches
     self.length = l
 
+    #array of points in cloth gird
     self.points = [[Point(x*l+offset[0],y*l+offset[1]) for x in range(size)] for y in range(size)]
     
+    #array of links in cloth grid
     self.links = []
 
+    #array of patches in cloth grid
     self.patches = []
 
+    #amount of patches in cloth
     self.patchesAmount = 0
 
     #counts how many patches are showing the backside
@@ -158,12 +170,13 @@ class Cloth:
     #rotate cloth 2D 
     self.rotationAmount = math.pi / 6 #can mess with this number, should be in format math.pi / x where x is some int, nums far from zero (ex: 30 or -30) do interesting things
 
+    #for each point in cloth, create links between and connect adjacent ones to each other
     for y, row in enumerate(self.points):
       for x, point in enumerate(row):
         if y == 0: #change to the following to see something cool: ((y == 0 and x == 0) or (y == 0 and x == len(row) - 1)):
           point.pinned = True
 
-          #rotate cloth by rotationAmount
+          #rotate top of cloth by rotationAmount
           # equation resource: https://danceswithcode.net/engineeringnotes/rotations_in_2d/rotations_in_2d.html 
           point.x = point.x*math.cos(self.rotationAmount) - point.y*math.sin(self.rotationAmount)
           point.y = point.x*math.sin(self.rotationAmount) + point.y*math.cos(self.rotationAmount)
@@ -172,6 +185,7 @@ class Cloth:
           if x != 0:
             self.links.append(Link(point, row[x-1], l, tear))
           self.links.append(Link(point, self.points[y-1][x], l, tear))
+    
     #--- Our edits start here ---
     #initialize patches
     for i in range(size-1):
@@ -189,6 +203,7 @@ class Cloth:
         right = self.links[j*2+i*(2*(size-1)+1)+2]
         self.patches.append(Patch(top, bottom, left, right, colors_f[i][j], colors_b[i][j]))
 
+    #updated patchesAmount to store amount of patches
     self.patchesAmount = len(self.patches)
     #--- Our edits end here ---
     self.dragging = []
