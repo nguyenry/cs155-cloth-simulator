@@ -36,7 +36,7 @@ def main():
   #used to determine how image maps onto cloth
   cloth_size = 20
   cloth_l = 500/cloth_size
-  c_tear = 100
+  c_tear = 1000
 
   #load in pre-included images
   #can change the front or back color of the cloth to any of the below
