@@ -12,7 +12,8 @@ from simulation import Cloth
 
 pygame.init()
 
-flags = pygame.FULLSCREEN | pygame.DOUBLEBUF
+#flags = pygame.FULLSCREEN | pygame.DOUBLEBUF
+flags = pygame.DOUBLEBUF
 
 screen = pygame.display.set_mode((0,0), flags, 16)
 
@@ -276,7 +277,7 @@ def main():
 
             #sparkly effect:
             r = random.random()
-            #pygame.draw.circle(screen, (255,255,255), (int(point.x) + i*5,int(point.y) + i*10 * r), 2 * r) 
+            pygame.draw.circle(screen, (255,255,255), (int(point.x) + i*5,int(point.y) + i*10 * r), 2 * r) 
 
             #control color shift for sherbert effect
             if colShift > 254:
